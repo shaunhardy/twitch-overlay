@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Clock</title>
+</head>
+<body>
+    <div id="output"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script>
+        var urlParams;
+        (function () {
+            var match,
+                pl     = /\+/g,  // Regex for replacing addition symbol with a space
+                search = /([^&=]+)=?([^&]*)/g,
+                decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+                query  = window.location.search.substring(1);
+            urlParams = {};
+            while (match = search.exec(query))
+                urlParams[decode(match[1])] = decode(match[2]);
+        })();
+        var output = document.getElementById("output");
+        if (urlParams["style"]) output.setAttribute("style", urlParams["style"]);
+        if (urlParams["bodyStyle"]) document.body.setAttribute("style", urlParams["bodyStyle"]);
+        var c;
+        setInterval(
+            c = function() {
+                output.innerText = moment().zone("-0500").format(urlParams["format"] || '');
+            }, 1000);
+        c();
+    </script>
+</body>
+</html>
