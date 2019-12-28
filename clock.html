@@ -2,10 +2,22 @@
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width; initial-scale=1.0">
     <title>Clock</title>
+    <style>
+        body { color: #fff; font: 12px/14px monospace; }
+        #wrapper { background: rgba(0,0,0,.6); padding: 5px; position: relative; }
+        #wrapper::after { content: ""; background: url(img/logo.png) 50% no-repeat; opacity: 0.1; top: 0; left: 0; bottom: 0; right: 0; position: absolute; z-index: -1; }
+        #logo { height: 42px; float: right; }
+    </style>
 </head>
 <body>
-    <div id="output"></div>
+    <div id="wrapper">
+        <img id="logo" src="img/logo.png">
+        <div id="line1"></div>
+        <div id="line2"></div>
+        <div id="timestamp"></div>
+    </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script>
         var urlParams;
@@ -19,13 +31,19 @@
             while (match = search.exec(query))
                 urlParams[decode(match[1])] = decode(match[2]);
         })();
-        var output = document.getElementById("output");
-        if (urlParams["style"]) output.setAttribute("style", urlParams["style"]);
+        var timestamp = document.getElementById("timestamp");
+        var line1 = document.getElementById("line1");
+        var line2 = document.getElementById("line2");
+        var logo = document.getElementById("logo");
+        if (urlParams["style"]) timestamp.setAttribute("style", urlParams["style"]);
         if (urlParams["bodyStyle"]) document.body.setAttribute("style", urlParams["bodyStyle"]);
+        if (urlParams["line1"]) line1.innerHTML = urlParams["line1"];
+        if (urlParams["line2"]) line2.innerHTML = urlParams["line2"];
+        if (urlParams["logo"]) logo.src = urlParams["logo"];
         var c;
         setInterval(
             c = function() {
-                output.innerText = moment().zone("-0500").format(urlParams["format"] || '');
+                timestamp.innerText = moment().zone("-0500").format(urlParams["format"] || '');
             }, 1000);
         c();
     </script>
